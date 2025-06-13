@@ -134,6 +134,22 @@ VOLATILITY_ADJUSTMENTS = {
     'high': 1.5,     # 🔥 ЕЩЕ БОЛЬШЕ при высокой  
     'extreme': 2.0   # 🔥 МАКСИМУМ при экстремальной!
 }
+# Настройки индикаторов (включение/выключение)
+INDICATOR_SETTINGS = {
+    'use_rsi': True,
+    'use_bollinger': True,
+    'use_volume_filter': True,
+    'use_macd': False
+}
+
+# Дополнительные функции, которые можно включать и выключать
+FEATURE_FLAGS = {
+    'machine_learning': True,
+    'trailing_stop': True,
+    'turbo_mode': False,
+    'aggressive_mode': False
+}
+
 
 # ======= 🔥 ОТКЛЮЧАЕМ ЗАЩИТУ - ПРОЧЬ ОГРАНИЧЕНИЯ! 🔥 =======
 
@@ -360,6 +376,7 @@ __all__ = [
     'VOLATILITY_THRESHOLDS', 'VOLATILITY_ADJUSTMENTS', 'RESET_CONDITIONS',
     'SAFETY_MECHANISMS', 'EMERGENCY_STOP_CONDITIONS',
     'TREND_FILTER_SETTINGS', 'TREND_MODES', 'CURRENT_TREND_MODE',  # 🎯 НОВОЕ
+    'INDICATOR_SETTINGS', 'FEATURE_FLAGS',
     'NAPALM_COMMANDS', 'NAPALM_TARGETS', 'NAPALM_MESSAGES',
     'calculate_napalm_expectations', 'validate_napalm_config'
 ]

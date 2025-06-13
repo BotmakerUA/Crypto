@@ -23,6 +23,7 @@ from datetime import datetime, timedelta
 from dataclasses import dataclass
 from typing import Dict, List, Optional, Tuple
 import random
+from ml_agent import MachineLearningAgent
 
 # Импорт из config_fixed.py
 try:
@@ -39,6 +40,18 @@ except ImportError:
     BRICK_SIZE = 0.005
     TELEGRAM_TOKEN = "YOUR_TELEGRAM_TOKEN"
     TELEGRAM_CHAT_ID = 0
+    INDICATOR_SETTINGS = {
+        'use_rsi': True,
+        'use_bollinger': True,
+        'use_volume_filter': True,
+        'use_macd': False,
+    }
+    FEATURE_FLAGS = {
+        'machine_learning': True,
+        'trailing_stop': True,
+        'turbo_mode': False,
+        'aggressive_mode': False,
+    }
 
 # 🔥 НОВЫЕ КОНСТАНТЫ V2 🔥
 
@@ -256,6 +269,20 @@ class NapalmProBotV2:
         
         # 🎯 НОВЫЙ ТРЕНДОВЫЙ ФИЛЬТР
         self.trend_filter = TrendFilter(TREND_FILTER_SETTINGS)
+
+        # 📈 Machine learning helper
+        self.ml_agent = MachineLearningAgent()
+
+        # ⚙️ Индикаторы
+        self.indicator_settings = INDICATOR_SETTINGS.copy()
+
+        # 🔧 Флаги функций
+        self.feature_flags = FEATURE_FLAGS.copy()
+        self.use_ml = self.feature_flags.get('machine_learning', True)
+        self.trailing_stop_enabled = self.feature_flags.get('trailing_stop', True)
+        self.turbo_mode = self.feature_flags.get('turbo_mode', False)
+        if self.feature_flags.get('aggressive_mode', False):
+            self.aggressive_multiplier = 2.0
         
         # 📈 РАСШИРЕННЫЕ РЫНОЧНЫЕ ДАННЫЕ
         self.market_conditions = {
@@ -556,6 +583,7 @@ class NapalmProBotV2:
                 'rsi': df['rsi'].iloc[-1],
                 'volume_ratio': df['volume_ratio'].iloc[-1],
                 'bb_position': df['bb_position'].iloc[-1],
+                'macd_hist': df['macd_hist'].iloc[-1],
                 'last_update': datetime.now()
             })
             
@@ -601,7 +629,13 @@ class NapalmProBotV2:
         
         df['volume_ma'] = df['volume'].rolling(20).mean()
         df['volume_ratio'] = df['volume'] / df['volume_ma']
-        
+
+        df['ema_12'] = df['close'].ewm(span=12).mean()
+        df['ema_26'] = df['close'].ewm(span=26).mean()
+        df['macd'] = df['ema_12'] - df['ema_26']
+        df['macd_signal'] = df['macd'].ewm(span=9).mean()
+        df['macd_hist'] = df['macd'] - df['macd_signal']
+
         return df
 
     def adapt_strategy_v2(self):
@@ -736,6 +770,12 @@ class NapalmProBotV2:
         current_rsi = df['rsi'].iloc[-1] if 'rsi' in df.columns else 50
         current_bb_pos = df['bb_position'].iloc[-1] if 'bb_position' in df.columns else 0.5
         volume_ratio = df['volume_ratio'].iloc[-1] if 'volume_ratio' in df.columns else 1.0
+        macd_hist = df['macd_hist'].iloc[-1] if 'macd_hist' in df.columns else 0
+
+        use_rsi = self.indicator_settings.get('use_rsi', True)
+        use_bb = self.indicator_settings.get('use_bollinger', True)
+        use_vol = self.indicator_settings.get('use_volume_filter', True)
+        use_macd = self.indicator_settings.get('use_macd', False)
         
         last_5 = bricks[-5:]
         last_3 = bricks[-3:]
@@ -752,11 +792,14 @@ class NapalmProBotV2:
             else:
                 break
         
-        if (down_count >= 2 and 
+        rsi_ok_long = 20 < current_rsi < 65 if use_rsi else True
+        bb_ok_long = current_bb_pos < 0.8 if use_bb else True
+        vol_ok = volume_ratio > 0.8 if use_vol else True
+        macd_ok_long = macd_hist > 0 if use_macd else True
+
+        if (down_count >= 2 and
             last_3[-1]['direction'] == 'up' and
-            20 < current_rsi < 65 and
-            current_bb_pos < 0.8 and
-            volume_ratio > 0.8):
+            rsi_ok_long and bb_ok_long and vol_ok and macd_ok_long):
             
             signal = 'buy'
             strength = 0.75
@@ -775,11 +818,17 @@ class NapalmProBotV2:
             else:
                 break
         
-        if (up_count >= 2 and 
+        rsi_ok_short = 35 < current_rsi < 80 if use_rsi else True
+        bb_ok_short = current_bb_pos > 0.2 if use_bb else True
+        if use_vol:
+            vol_ok_short = volume_ratio > 0.8
+        else:
+            vol_ok_short = True
+        macd_ok_short = macd_hist < 0 if use_macd else True
+
+        if (up_count >= 2 and
             last_3[-1]['direction'] == 'down' and
-            35 < current_rsi < 80 and
-            current_bb_pos > 0.2 and
-            volume_ratio > 0.8):
+            rsi_ok_short and bb_ok_short and vol_ok_short and macd_ok_short):
             
             signal = 'sell'
             strength = 0.75
@@ -800,10 +849,13 @@ class NapalmProBotV2:
                 else:
                     break
             
+            rsi_mom_long = current_rsi < 70 if use_rsi else True
+            bb_mom_long = current_bb_pos < 0.9 if use_bb else True
+            vol_mom_long = volume_ratio > 1.0 if use_vol else True
+            macd_mom_long = macd_hist > 0 if use_macd else True
+
             if (up_sequence >= 3 and
-                current_rsi < 70 and
-                current_bb_pos < 0.9 and
-                volume_ratio > 1.0):
+                rsi_mom_long and bb_mom_long and vol_mom_long and macd_mom_long):
                 
                 signal = 'buy'
                 strength = 0.5 + (up_sequence * 0.05)
@@ -817,10 +869,13 @@ class NapalmProBotV2:
                 else:
                     break
             
+            rsi_mom_short = current_rsi > 30 if use_rsi else True
+            bb_mom_short = current_bb_pos > 0.1 if use_bb else True
+            vol_mom_short = volume_ratio > 1.0 if use_vol else True
+            macd_mom_short = macd_hist < 0 if use_macd else True
+
             if (down_sequence >= 3 and
-                current_rsi > 30 and
-                current_bb_pos > 0.1 and
-                volume_ratio > 1.0):
+                rsi_mom_short and bb_mom_short and vol_mom_short and macd_mom_short):
                 
                 signal = 'sell'
                 strength = 0.5 + (down_sequence * 0.05)
@@ -829,21 +884,23 @@ class NapalmProBotV2:
         
         # ФИЛЬТРЫ БЛОКИРОВКИ
         if signal:
-            if signal == 'buy' and current_rsi > 75:
-                self.stats['false_signals_blocked'] += 1
-                return None, 0, f"LONG blocked: RSI={current_rsi:.1f} overbought"
-            
-            if signal == 'sell' and current_rsi < 25:
-                self.stats['false_signals_blocked'] += 1
-                return None, 0, f"SHORT blocked: RSI={current_rsi:.1f} oversold"
-            
-            if signal == 'buy' and current_bb_pos > 0.95:
-                self.stats['false_signals_blocked'] += 1
-                return None, 0, f"LONG blocked: BB position={current_bb_pos:.2f}"
-            
-            if signal == 'sell' and current_bb_pos < 0.05:
-                self.stats['false_signals_blocked'] += 1
-                return None, 0, f"SHORT blocked: BB position={current_bb_pos:.2f}"
+            if use_rsi:
+                if signal == 'buy' and current_rsi > 75:
+                    self.stats['false_signals_blocked'] += 1
+                    return None, 0, f"LONG blocked: RSI={current_rsi:.1f} overbought"
+
+                if signal == 'sell' and current_rsi < 25:
+                    self.stats['false_signals_blocked'] += 1
+                    return None, 0, f"SHORT blocked: RSI={current_rsi:.1f} oversold"
+
+            if use_bb:
+                if signal == 'buy' and current_bb_pos > 0.95:
+                    self.stats['false_signals_blocked'] += 1
+                    return None, 0, f"LONG blocked: BB position={current_bb_pos:.2f}"
+
+                if signal == 'sell' and current_bb_pos < 0.05:
+                    self.stats['false_signals_blocked'] += 1
+                    return None, 0, f"SHORT blocked: BB position={current_bb_pos:.2f}"
             
             # ТРЕНДОВЫЙ ФИЛЬТР
             trend_result = self.trend_filter.filter_signal(
@@ -861,6 +918,19 @@ class NapalmProBotV2:
                 reason += f" + Trend Enhanced ({trend_result['multiplier']:.1f}x)"
                 self.stats['trend_enhancements'] += 1
         
+        if signal:
+            features = [
+                self.market_conditions['trend_strength'],
+                self.market_conditions['rsi'],
+                self.market_conditions['volatility']
+            ]
+            if use_macd:
+                features.append(macd_hist)
+            if self.use_ml:
+                prob = self.ml_agent.predict(features)
+                strength *= 0.5 + 0.5 * prob
+                reason += f" + ML {prob:.2f}"
+
         strength = min(strength, 1.0)
         return signal, strength, reason
 
@@ -1232,6 +1302,19 @@ class NapalmProBotV2:
         if current_balance < self.stats['session_low']:
             self.stats['session_low'] = current_balance
 
+        # Обновление данных для машинного обучения
+        if self.use_ml:
+            features = [
+                self.market_conditions.get('trend_strength', 0),
+                self.market_conditions.get('rsi', 50),
+                self.market_conditions.get('volatility', 0),
+            ]
+            if self.indicator_settings.get('use_macd', False):
+                features.append(self.market_conditions.get('macd_hist', 0))
+            result_flag = 1 if trade_result.net_pnl > 0 else 0
+            self.ml_agent.add_record(features, result_flag)
+            self.ml_agent.train()
+
     def send_enhanced_trade_notification(self, action, trade_result=None, reason=""):
         """Улучшенное уведомление о сделке"""
         mode = "🎮 ВИРТУАЛЬНАЯ" if self.virtual_mode else "💰 РЕАЛЬНАЯ"
@@ -1521,6 +1604,7 @@ class NapalmProBotV2:
     def toggle_turbo_mode(self):
         """Переключение турбо режима"""
         self.turbo_mode = not self.turbo_mode
+        self.feature_flags['turbo_mode'] = self.turbo_mode
         
         if self.turbo_mode:
             message = "⚡ <b>TURBO РЕЖИМ V2 ВКЛЮЧЕН!</b>\n\n🔥 +50% к размерам позиций"
@@ -1534,15 +1618,18 @@ class NapalmProBotV2:
         if self.aggressive_multiplier == 1.0:
             self.aggressive_multiplier = 2.0
             message = "🔥 <b>АГРЕССИВНЫЙ РЕЖИМ V2 ВКЛЮЧЕН!</b>\n\n⚡ Размеры позиций увеличены в 2 раза!"
+            self.feature_flags['aggressive_mode'] = True
         else:
             self.aggressive_multiplier = 1.0
             message = "❄️ <b>АГРЕССИВНЫЙ РЕЖИМ ВЫКЛЮЧЕН</b>\n\n✅ Стандартные размеры позиций"
+            self.feature_flags['aggressive_mode'] = False
         
         self.send_telegram_message(message)
 
     def toggle_trailing_stop(self):
         """Переключение улучшенного трейлинг стопа"""
         self.trailing_stop_enabled = not self.trailing_stop_enabled
+        self.feature_flags['trailing_stop'] = self.trailing_stop_enabled
         
         if self.trailing_stop_enabled:
             message = f"🔵 <b>TRAILING STOP V2 ВКЛЮЧЕН!</b>\n\n✅ Активация только при прибыли >{self.min_profit_for_trailing}%"
@@ -1550,6 +1637,11 @@ class NapalmProBotV2:
             message = "⭕ <b>TRAILING STOP ВЫКЛЮЧЕН</b>\n\n📊 Только фиксированные стопы TP/SL"
         
         self.send_telegram_message(message)
+
+    def set_machine_learning(self, enabled: bool):
+        """Включение или отключение машинного обучения"""
+        self.use_ml = bool(enabled)
+        self.feature_flags['machine_learning'] = self.use_ml
 
     def switch_to_virtual_mode(self):
         """Переключение на виртуальную торговлю"""
@@ -1821,8 +1913,12 @@ class NapalmProBotV2:
         if self.should_stop:
             self.send_telegram_message("✅ <b>NAPALM PRO V2 ОСТАНОВЛЕН</b>\n\n🔥 Работа завершена успешно!")
             self.send_napalm_performance_report()
-        
+
         logging.info("🏁 Улучшенный торговый цикл V2 завершен")
+
+    def run(self):
+        """Entry point used by external controllers."""
+        self.run_enhanced_trading_loop()
 
 # Запуск улучшенного бота
 if __name__ == "__main__":
