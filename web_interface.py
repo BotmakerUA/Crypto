@@ -134,5 +134,16 @@ def user_config(user_id):
         'leverage': bot.current_leverage,
     })
 
+@app.route('/user/<user_id>/settings', methods=['GET', 'POST'])
+def user_settings(user_id):
+    bot = get_bot(user_id)
+    if not bot:
+        return jsonify({'error': 'not found'}), 404
+    if request.method == 'POST':
+        data = request.get_json(force=True) or {}
+        bot.update_settings(data)
+        return jsonify({'updated': True})
+    return jsonify(bot.get_settings())
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000)

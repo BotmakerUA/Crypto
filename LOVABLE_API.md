@@ -28,6 +28,8 @@ The Flask server in `web_interface.py` exposes HTTP endpoints that the Lovable i
 - `POST /user/<id>/feature/<name>` – enable/disable a feature. Body: `{ "enabled": true }`.
 - `GET /user/<id>/indicators` – view indicator flags.
 - `POST /user/<id>/indicator/<name>` – toggle an indicator. Body: `{ "enabled": true }`.
+- `GET /user/<id>/settings` – fetch full configuration including features and indicators.
+- `POST /user/<id>/settings` – update any combination of options.
 
 ## Example
 ```bash

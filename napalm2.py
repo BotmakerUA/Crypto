@@ -289,6 +289,7 @@ class NapalmProBotV2:
         self.turbo_mode = self.feature_flags.get('turbo_mode', False)
         if self.feature_flags.get('aggressive_mode', False):
             self.aggressive_multiplier = 2.0
+        self.trend_mode = CURRENT_TREND_MODE
         
         # 📈 РАСШИРЕННЫЕ РЫНОЧНЫЕ ДАННЫЕ
         self.market_conditions = {
@@ -441,7 +442,7 @@ class NapalmProBotV2:
 ✅ Напалмовый мартингейл до x64%
 
 🎯 <b>ТРЕНДОВЫЙ ФИЛЬТР:</b>
-• Режим: {CURRENT_TREND_MODE.upper()}
+• Режим: {self.trend_mode.upper()}
 • EMA период: {self.trend_filter.ema_period}
 • Блокировка против тренда: ✅
 • Усиление по тренду: ✅
@@ -1432,7 +1433,7 @@ class NapalmProBotV2:
     def send_trend_status(self):
         """Статус трендового фильтра"""
         status = "✅ ВКЛЮЧЕН" if self.trend_filter.enabled else "❌ ВЫКЛЮЧЕН"
-        mode = CURRENT_TREND_MODE.upper()
+        mode = self.trend_mode.upper()
         
         message = f"""
 🎯 <b>ТРЕНДОВЫЙ ФИЛЬТР V2</b>
@@ -1461,6 +1462,7 @@ class NapalmProBotV2:
         new_index = (current_index + 1) % len(modes)
         new_mode = modes[new_index]
         CURRENT_TREND_MODE = new_mode
+        self.trend_mode = new_mode
         
         new_settings = TREND_MODES[new_mode]
         self.trend_filter.block_against_trend = new_settings['block_against_trend']
@@ -1648,6 +1650,52 @@ class NapalmProBotV2:
         """Включение или отключение машинного обучения"""
         self.use_ml = bool(enabled)
         self.feature_flags['machine_learning'] = self.use_ml
+
+    def get_settings(self):
+        """Return current configuration for API consumption."""
+        return {
+            'symbol': self.current_symbol,
+            'timeframe': self.current_timeframe,
+            'leverage': self.current_leverage,
+            'virtual': self.virtual_mode,
+            'trend_mode': self.trend_mode,
+            'features': self.feature_flags,
+            'indicators': self.indicator_settings,
+        }
+
+    def update_settings(self, settings: dict):
+        """Update multiple settings at once from API."""
+        if 'symbol' in settings:
+            self.current_symbol = settings['symbol']
+        if 'timeframe' in settings:
+            self.current_timeframe = settings['timeframe']
+        if 'leverage' in settings:
+            self.current_leverage = settings['leverage']
+        if 'virtual' in settings:
+            self.virtual_mode = bool(settings['virtual'])
+        if 'trend_mode' in settings and settings['trend_mode'] in TREND_MODES:
+            self.trend_mode = settings['trend_mode']
+            new_settings = TREND_MODES[self.trend_mode]
+            self.trend_filter.block_against_trend = new_settings['block_against_trend']
+            self.trend_filter.enhance_with_trend = new_settings['enhance_with_trend']
+            self.trend_filter.neutral_zone_trading = new_settings['neutral_zone_trading']
+            self.trend_filter.min_trend_confidence = new_settings['min_trend_confidence']
+        if 'features' in settings:
+            for k, v in settings['features'].items():
+                if k in self.feature_flags:
+                    if k == 'turbo_mode' and bool(v) != self.turbo_mode:
+                        self.toggle_turbo_mode()
+                    elif k == 'aggressive_mode' and bool(v) != (self.aggressive_multiplier > 1.0):
+                        self.toggle_aggressive_mode()
+                    elif k == 'trailing_stop' and bool(v) != self.trailing_stop_enabled:
+                        self.toggle_trailing_stop()
+                    elif k == 'machine_learning':
+                        self.set_machine_learning(bool(v))
+                    self.feature_flags[k] = bool(v)
+        if 'indicators' in settings:
+            for k, v in settings['indicators'].items():
+                if k in self.indicator_settings:
+                    self.indicator_settings[k] = bool(v)
 
     def switch_to_virtual_mode(self):
         """Переключение на виртуальную торговлю"""

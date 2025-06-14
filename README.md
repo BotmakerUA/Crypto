@@ -31,6 +31,7 @@ timeframe, telegram ids). Then manage each bot with the following endpoints:
   features like turbo or trailing stop
 - `GET /user/<id>/indicators` and `POST /user/<id>/indicator/<name>` – manage
   indicator filters
+- `GET/POST /user/<id>/settings` – view or update all settings in one call
 
 See **LOVABLE_API.md** for instructions on connecting these endpoints to a
 Lovable-based web interface.
