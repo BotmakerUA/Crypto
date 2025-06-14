@@ -1,12 +1,14 @@
 # config_fixed.py - НАПАЛМОВЫЕ настройки с ТРЕНДОВЫМ ФИЛЬТРОМ!
 
+import os
+
 # ======= API И TELEGRAM =======
-API_KEY    = "Ing5poGZCl68drwGUb"
-API_SECRET = "Otgbt6tDT5QofVuUzy03K7VhdLG12GMbM2zO"
+API_KEY = os.getenv("API_KEY")
+API_SECRET = os.getenv("API_SECRET")
 TESTNET_MODE = False
 
-TELEGRAM_TOKEN   = "7322460926:AAEOBTIkEAuHAY_OXgOGCS6h4jPMbCpHGUw"
-TELEGRAM_CHAT_ID = 550200364
+TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
+TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
 SUPPORTED_SYMBOLS = {
     "SOL": "SOL/USDT:USDT",        # Solana
