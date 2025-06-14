@@ -1,10 +1,12 @@
 """Simple Flask web interface for controlling NapalmProBotV2."""
 
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from threading import Thread
 from napalm2 import NapalmProBotV2
 
 app = Flask(__name__)
+CORS(app)
 
 # Storage for user-specific bot instances
 bots = {}
