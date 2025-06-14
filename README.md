@@ -20,10 +20,14 @@ pip install Flask scikit-learn
 python web_interface.py
 ```
 
-Open `http://localhost:8000/status` to check the bot status.
+Create a user bot via `POST /user/<id>` with JSON settings (symbol,
+timeframe, telegram ids). Then manage each bot with the following endpoints:
 
-`/indicators` returns the current indicator settings, and `/indicator/<name>`
-can enable or disable a specific indicator by sending `{ "enabled": true }`.
-
-`/features` lists feature flags like turbo mode or trailing stop. Use
-`/feature/<name>` with `{ "enabled": false }` to toggle them at runtime.
+- `GET /users` – list active user IDs
+- `GET /user/<id>/status` – current state for a user
+- `POST /user/<id>/start` / `POST /user/<id>/stop` – control trading
+- `GET/POST /user/<id>/config` – fetch or update symbol/timeframe/leverage
+- `GET /user/<id>/features` and `POST /user/<id>/feature/<name>` – toggle
+  features like turbo or trailing stop
+- `GET /user/<id>/indicators` and `POST /user/<id>/indicator/<name>` – manage
+  indicator filters

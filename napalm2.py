@@ -238,8 +238,14 @@ class TrendFilter:
             return 1.0
 
 class NapalmProBotV2:
-    def __init__(self, virtual_mode=True):
+    def __init__(self, user_id='default', telegram_token=None, telegram_chat_id=None,
+                 symbol=None, timeframe=None, leverage=None,
+                 virtual_mode=True):
         # 🎮 Режим торговли
+        self.user_id = user_id
+        self.telegram_token = telegram_token or TELEGRAM_TOKEN
+        self.telegram_chat_id = telegram_chat_id or TELEGRAM_CHAT_ID
+
         self.virtual_mode = virtual_mode
         self.virtual_balance = START_BALANCE
         
@@ -324,9 +330,9 @@ class NapalmProBotV2:
         }
         
         # Торговые параметры
-        self.current_symbol = SYMBOL
-        self.current_timeframe = TIMEFRAME
-        self.current_leverage = LEVERAGE
+        self.current_symbol = symbol or SYMBOL
+        self.current_timeframe = timeframe or TIMEFRAME
+        self.current_leverage = leverage or LEVERAGE
         self.is_running = True
         self.should_stop = False
         self.last_update_id = 0
@@ -393,7 +399,7 @@ class NapalmProBotV2:
         """Очистка старых сообщений"""
         try:
             logging.info("🧹 Очистка старых сообщений...")
-            url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/getUpdates"
+            url = f"https://api.telegram.org/bot{self.telegram_token}/getUpdates"
             params = {'timeout': 1}
             response = requests.get(url, params=params, timeout=5)
             
@@ -403,7 +409,7 @@ class NapalmProBotV2:
                     last_update = data['result'][-1]
                     self.last_update_id = last_update['update_id']
                     
-                    confirm_url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/getUpdates"
+                    confirm_url = f"https://api.telegram.org/bot{self.telegram_token}/getUpdates"
                     confirm_params = {'offset': self.last_update_id + 1}
                     requests.get(confirm_url, params=confirm_params, timeout=5)
                     
@@ -462,9 +468,9 @@ class NapalmProBotV2:
     def send_telegram_message(self, message):
         """Отправка сообщения в Telegram"""
         try:
-            url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
+            url = f"https://api.telegram.org/bot{self.telegram_token}/sendMessage"
             data = {
-                'chat_id': TELEGRAM_CHAT_ID,
+                'chat_id': self.telegram_chat_id,
                 'text': message,
                 'parse_mode': 'HTML'
             }
@@ -480,7 +486,7 @@ class NapalmProBotV2:
         """Обработчик команд Telegram"""
         while self.is_running:
             try:
-                url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/getUpdates"
+                url = f"https://api.telegram.org/bot{self.telegram_token}/getUpdates"
                 params = {
                     'offset': self.last_update_id + 1,
                     'timeout': 10,
@@ -507,7 +513,7 @@ class NapalmProBotV2:
                                 if message_age > 60:
                                     continue
                                     
-                                if chat_id == TELEGRAM_CHAT_ID:
+                                if chat_id == self.telegram_chat_id:
                                     logging.info(f"📨 Команда: {text}")
                                     self.process_enhanced_command(text)
                 
