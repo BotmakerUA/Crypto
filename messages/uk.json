@@ -1,0 +1,89 @@
+{
+  "common": {
+    "appName": "AI Learning Portal",
+    "welcome": "Ласкаво просимо",
+    "signIn": "Увійти",
+    "signUp": "Зареєструватися",
+    "signOut": "Вийти",
+    "email": "Email",
+    "phone": "Телефон",
+    "password": "Пароль",
+    "confirmPassword": "Підтвердіть пароль",
+    "continue": "Продовжити",
+    "back": "Назад",
+    "next": "Далі",
+    "save": "Зберегти",
+    "cancel": "Скасувати",
+    "loading": "Завантаження...",
+    "error": "Помилка",
+    "success": "Успішно"
+  },
+  "nav": {
+    "home": "Головна",
+    "courses": "Курси",
+    "lessons": "Уроки",
+    "dashboard": "Кабінет",
+    "admin": "Адмін"
+  },
+  "home": {
+    "hero": {
+      "title": "Навчіться використовувати ШІ у повсякденному житті",
+      "subtitle": "Практичний курс для тих, хто хоче опанувати ChatGPT, Claude та Perplexity всього за місяць",
+      "cta": "Почати навчання",
+      "freeTrial": "Перший урок безкоштовно"
+    },
+    "features": {
+      "title": "Що ви отримаєте",
+      "practical": {
+        "title": "Практичні навички",
+        "description": "Реальні приклади використання ШІ в житті, побуті та на роботі"
+      },
+      "stepByStep": {
+        "title": "Покрокове навчання",
+        "description": "12 уроків за місяць, 3 рази на тиждень з можливістю продовження"
+      },
+      "support": {
+        "title": "Підтримка 24/7",
+        "description": "Нагадування та матеріали у Telegram"
+      }
+    }
+  },
+  "auth": {
+    "signInTitle": "Вхід до системи",
+    "signUpTitle": "Реєстрація",
+    "emailOrPhone": "Email або телефон",
+    "alreadyHaveAccount": "Вже є акаунт?",
+    "dontHaveAccount": "Немає акаунту?",
+    "signInHere": "Увійдіть тут",
+    "signUpHere": "Зареєструйтесь тут"
+  },
+  "lessons": {
+    "title": "Уроки курсу",
+    "locked": "Заблоковано",
+    "completed": "Завершено",
+    "inProgress": "В процесі",
+    "notStarted": "Не розпочато",
+    "startLesson": "Розпочати урок",
+    "continueLesson": "Продовжити урок",
+    "completeLesson": "Завершити урок",
+    "nextLesson": "Наступний урок",
+    "previousLesson": "Попередній урок",
+    "progress": "Прогрес",
+    "freeLesson": "Безкоштовний урок"
+  },
+  "payment": {
+    "title": "Оплата курсу",
+    "coursePrice": "Вартість курсу",
+    "extensionPrice": "Продовження курсу",
+    "payNow": "Оплатити зараз",
+    "monthAccess": "Доступ на 1 місяць",
+    "lifetimeAccess": "Доступ назавжди"
+  },
+  "dashboard": {
+    "title": "Мій кабінет",
+    "myProgress": "Мій прогрес",
+    "completedLessons": "Завершено уроків",
+    "timeLeft": "Залишилось часу",
+    "extendAccess": "Продовжити доступ"
+  }
+}

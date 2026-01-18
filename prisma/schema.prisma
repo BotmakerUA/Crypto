@@ -1,0 +1,147 @@
+// This is your Prisma schema file
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String?   @unique
+  phone         String?   @unique
+  passwordHash  String
+  name          String?
+  telegramId    String?   @unique
+  role          Role      @default(USER)
+  locale        String    @default("uk")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  subscriptions Subscription[]
+  progress      Progress[]
+  payments      Payment[]
+
+  @@index([email])
+  @@index([phone])
+}
+
+model Course {
+  id          String   @id @default(cuid())
+  title       Json     // { "uk": "...", "ru": "...", "en": "..." }
+  description Json
+  slug        String   @unique
+  isPublished Boolean  @default(false)
+  price       Int      // ціна в центах
+  durationDays Int     @default(30)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  lessons      Lesson[]
+  subscriptions Subscription[]
+}
+
+model Lesson {
+  id          String   @id @default(cuid())
+  courseId    String
+  order       Int      // порядковий номер уроку (1, 2, 3...)
+  title       Json     // { "uk": "...", "ru": "...", "en": "..." }
+  description Json
+  content     Json     // { "uk": { "text": "...", "images": [], "videoUrl": "" }, ... }
+  isFree      Boolean  @default(false)
+  isPublished Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  course   Course     @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  progress Progress[]
+
+  @@unique([courseId, order])
+  @@index([courseId])
+}
+
+model Progress {
+  id          String   @id @default(cuid())
+  userId      String
+  lessonId    String
+  status      ProgressStatus @default(NOT_STARTED)
+  completedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, lessonId])
+  @@index([userId])
+  @@index([lessonId])
+}
+
+model Subscription {
+  id          String   @id @default(cuid())
+  userId      String
+  courseId    String
+  status      SubscriptionStatus @default(ACTIVE)
+  startDate   DateTime @default(now())
+  endDate     DateTime
+  isLifetime  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([courseId])
+  @@index([status])
+}
+
+model Payment {
+  id              String        @id @default(cuid())
+  userId          String
+  amount          Int           // сума в центах
+  currency        String        @default("usd")
+  status          PaymentStatus @default(PENDING)
+  stripePaymentId String?       @unique
+  type            PaymentType
+  metadata        Json?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum ProgressStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  EXPIRED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  REFUNDED
+}
+
+enum PaymentType {
+  COURSE_PURCHASE
+  COURSE_EXTENSION
+}

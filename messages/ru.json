@@ -1,0 +1,89 @@
+{
+  "common": {
+    "appName": "AI Learning Portal",
+    "welcome": "Добро пожаловать",
+    "signIn": "Войти",
+    "signUp": "Зарегистрироваться",
+    "signOut": "Выйти",
+    "email": "Email",
+    "phone": "Телефон",
+    "password": "Пароль",
+    "confirmPassword": "Подтвердите пароль",
+    "continue": "Продолжить",
+    "back": "Назад",
+    "next": "Далее",
+    "save": "Сохранить",
+    "cancel": "Отмена",
+    "loading": "Загрузка...",
+    "error": "Ошибка",
+    "success": "Успешно"
+  },
+  "nav": {
+    "home": "Главная",
+    "courses": "Курсы",
+    "lessons": "Уроки",
+    "dashboard": "Кабинет",
+    "admin": "Админ"
+  },
+  "home": {
+    "hero": {
+      "title": "Научитесь использовать ИИ в повседневной жизни",
+      "subtitle": "Практический курс для тех, кто хочет освоить ChatGPT, Claude и Perplexity всего за месяц",
+      "cta": "Начать обучение",
+      "freeTrial": "Первый урок бесплатно"
+    },
+    "features": {
+      "title": "Что вы получите",
+      "practical": {
+        "title": "Практические навыки",
+        "description": "Реальные примеры использования ИИ в жизни, быту и на работе"
+      },
+      "stepByStep": {
+        "title": "Пошаговое обучение",
+        "description": "12 уроков за месяц, 3 раза в неделю с возможностью продления"
+      },
+      "support": {
+        "title": "Поддержка 24/7",
+        "description": "Напоминания и материалы в Telegram"
+      }
+    }
+  },
+  "auth": {
+    "signInTitle": "Вход в систему",
+    "signUpTitle": "Регистрация",
+    "emailOrPhone": "Email или телефон",
+    "alreadyHaveAccount": "Уже есть аккаунт?",
+    "dontHaveAccount": "Нет аккаунта?",
+    "signInHere": "Войдите здесь",
+    "signUpHere": "Зарегистрируйтесь здесь"
+  },
+  "lessons": {
+    "title": "Уроки курса",
+    "locked": "Заблокировано",
+    "completed": "Завершено",
+    "inProgress": "В процессе",
+    "notStarted": "Не начато",
+    "startLesson": "Начать урок",
+    "continueLesson": "Продолжить урок",
+    "completeLesson": "Завершить урок",
+    "nextLesson": "Следующий урок",
+    "previousLesson": "Предыдущий урок",
+    "progress": "Прогресс",
+    "freeLesson": "Бесплатный урок"
+  },
+  "payment": {
+    "title": "Оплата курса",
+    "coursePrice": "Стоимость курса",
+    "extensionPrice": "Продление курса",
+    "payNow": "Оплатить сейчас",
+    "monthAccess": "Доступ на 1 месяц",
+    "lifetimeAccess": "Доступ навсегда"
+  },
+  "dashboard": {
+    "title": "Мой кабинет",
+    "myProgress": "Мой прогресс",
+    "completedLessons": "Завершено уроков",
+    "timeLeft": "Осталось времени",
+    "extendAccess": "Продлить доступ"
+  }
+}

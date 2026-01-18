@@ -1,0 +1,89 @@
+{
+  "common": {
+    "appName": "AI Learning Portal",
+    "welcome": "Welcome",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "signOut": "Sign Out",
+    "email": "Email",
+    "phone": "Phone",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "continue": "Continue",
+    "back": "Back",
+    "next": "Next",
+    "save": "Save",
+    "cancel": "Cancel",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success"
+  },
+  "nav": {
+    "home": "Home",
+    "courses": "Courses",
+    "lessons": "Lessons",
+    "dashboard": "Dashboard",
+    "admin": "Admin"
+  },
+  "home": {
+    "hero": {
+      "title": "Learn to Use AI in Everyday Life",
+      "subtitle": "A practical course for those who want to master ChatGPT, Claude, and Perplexity in just one month",
+      "cta": "Start Learning",
+      "freeTrial": "First lesson free"
+    },
+    "features": {
+      "title": "What You'll Get",
+      "practical": {
+        "title": "Practical Skills",
+        "description": "Real-world examples of using AI in life, home, and work"
+      },
+      "stepByStep": {
+        "title": "Step-by-Step Learning",
+        "description": "12 lessons per month, 3 times a week with extension option"
+      },
+      "support": {
+        "title": "24/7 Support",
+        "description": "Reminders and materials via Telegram"
+      }
+    }
+  },
+  "auth": {
+    "signInTitle": "Sign In",
+    "signUpTitle": "Sign Up",
+    "emailOrPhone": "Email or Phone",
+    "alreadyHaveAccount": "Already have an account?",
+    "dontHaveAccount": "Don't have an account?",
+    "signInHere": "Sign in here",
+    "signUpHere": "Sign up here"
+  },
+  "lessons": {
+    "title": "Course Lessons",
+    "locked": "Locked",
+    "completed": "Completed",
+    "inProgress": "In Progress",
+    "notStarted": "Not Started",
+    "startLesson": "Start Lesson",
+    "continueLesson": "Continue Lesson",
+    "completeLesson": "Complete Lesson",
+    "nextLesson": "Next Lesson",
+    "previousLesson": "Previous Lesson",
+    "progress": "Progress",
+    "freeLesson": "Free Lesson"
+  },
+  "payment": {
+    "title": "Course Payment",
+    "coursePrice": "Course Price",
+    "extensionPrice": "Course Extension",
+    "payNow": "Pay Now",
+    "monthAccess": "1 Month Access",
+    "lifetimeAccess": "Lifetime Access"
+  },
+  "dashboard": {
+    "title": "My Dashboard",
+    "myProgress": "My Progress",
+    "completedLessons": "Completed Lessons",
+    "timeLeft": "Time Left",
+    "extendAccess": "Extend Access"
+  }
+}
