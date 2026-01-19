@@ -124,9 +124,34 @@ npm run dev
 
 ## Deployment
 
-Проєкт готовий до розгортання на:
-- Vercel (рекомендовано)
+### 🚀 Быстрый деплой на Vercel (1 минута)
+
+**Шаг 1:** Перейдите на [Vercel](https://vercel.com) и войдите через GitHub
+
+**Шаг 2:** Нажмите "Add New Project" → Import Git Repository → выберите этот репозиторий
+
+**Шаг 3:** Добавьте бесплатную базу данных PostgreSQL:
+- Перейдите в Storage → Create Database → Postgres
+- Или подключите [Neon](https://neon.tech) (бесплатно 0.5GB)
+
+**Шаг 4:** Добавьте минимальные переменные окружения:
+```
+DATABASE_URL=ваш-postgres-url
+NEXTAUTH_URL=https://ваш-проект.vercel.app
+NEXTAUTH_SECRET=любая-секретная-строка
+```
+
+**Шаг 5:** Нажмите Deploy! 🎉
+
+Ваш сайт будет доступен по адресу `https://ваш-проект.vercel.app`
+
+---
+
+### Альтернативные варианты
+
+Проєкт также можно развернуть на:
 - Railway
+- Render
 - DigitalOcean
 - AWS
 
