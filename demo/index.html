@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Learning Portal - Навчання роботі з ШІ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#ff8c42',
+                        'primary-dark': '#ff7420',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .dark {
+            background: #1a1a1a;
+            color: #f5f5f5;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #ffffff 0%, #fff5f0 100%);
+        }
+        .dark .gradient-bg {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2520 100%);
+        }
+        .lesson-card {
+            transition: all 0.3s ease;
+        }
+        .lesson-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(255, 140, 66, 0.2);
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <!-- Header -->
+    <header class="bg-white dark:bg-gray-900 shadow-md">
+        <nav class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <svg class="w-8 h-8 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/>
+                    </svg>
+                    <span class="text-2xl font-bold text-gray-900 dark:text-white">AI Learning Portal</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <!-- Language Switcher -->
+                    <select id="langSwitch" class="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white">
+                        <option value="uk">🇺🇦 UA</option>
+                        <option value="ru">🇷🇺 RU</option>
+                        <option value="en">🇬🇧 EN</option>
+                    </select>
+                    <!-- Theme Toggle -->
+                    <button id="themeToggle" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600">
+                        <svg class="w-6 h-6 hidden dark:block text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"/>
+                        </svg>
+                        <svg class="w-6 h-6 block dark:hidden text-gray-700" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/>
+                        </svg>
+                    </button>
+                    <button onclick="showPage('auth')" class="px-4 py-2 text-primary hover:text-primary-dark font-medium">
+                        Увійти
+                    </button>
+                    <button onclick="showPage('auth')" class="px-6 py-2 bg-primary hover:bg-primary-dark text-white rounded-lg font-medium transition">
+                        Почати навчання
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12">
+        <!-- Home Page -->
+        <div id="homePage" class="page">
+            <!-- Hero Section -->
+            <section class="text-center mb-16">
+                <h1 class="text-5xl font-bold text-gray-900 dark:text-white mb-6">
+                    Навчіться використовувати ШІ<br/>у повсякденному житті
+                </h1>
+                <p class="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
+                    Практичний курс для тих, хто хоче освоїти ChatGPT, Claude і Perplexity всього за один місяць
+                </p>
+                <div class="flex items-center justify-center space-x-4">
+                    <button onclick="showPage('lessons')" class="px-8 py-4 bg-primary hover:bg-primary-dark text-white rounded-lg font-bold text-lg transition shadow-lg">
+                        Розпочати навчання
+                    </button>
+                    <span class="px-4 py-2 bg-green-100 text-green-800 rounded-lg font-medium">
+                        Перший урок безкоштовно
+                    </span>
+                </div>
+            </section>
+
+            <!-- Features -->
+            <section class="grid md:grid-cols-3 gap-8 mb-16">
+                <div class="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg">
+                    <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Практичні навички</h3>
+                    <p class="text-gray-600 dark:text-gray-300">Реальні приклади використання ШІ в житті, побуті та на роботі</p>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg">
+                    <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Покроковe навчання</h3>
+                    <p class="text-gray-600 dark:text-gray-300">12 уроків на місяць, 3 рази на тиждень з можливістю продовження</p>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg">
+                    <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-2 0c0 .993-.241 1.929-.668 2.754l-1.524-1.525a3.997 3.997 0 00.078-2.183l1.562-1.562C15.802 8.249 16 9.1 16 10zm-5.165 3.913l1.58 1.58A5.98 5.98 0 0110 16a5.976 5.976 0 01-2.516-.552l1.562-1.562a4.006 4.006 0 001.789.027zm-4.677-2.796a4.002 4.002 0 01-.041-2.08l-.08.08-1.53-1.533A5.98 5.98 0 004 10c0 .954.223 1.856.619 2.657l1.54-1.54zm1.088-6.45A5.974 5.974 0 0110 4c.954 0 1.856.223 2.657.619l-1.54 1.54a4.002 4.002 0 00-2.346.033L7.246 4.668zM12 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Підтримка 24/7</h3>
+                    <p class="text-gray-600 dark:text-gray-300">Нагадування та матеріали через Telegram</p>
+                </div>
+            </section>
+
+            <!-- Pricing -->
+            <section class="bg-white dark:bg-gray-800 rounded-2xl p-12 shadow-xl max-w-4xl mx-auto">
+                <h2 class="text-3xl font-bold text-center text-gray-900 dark:text-white mb-8">Вартість курсу</h2>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="border-2 border-gray-200 dark:border-gray-700 rounded-xl p-8 hover:border-primary transition">
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Місячна підписка</h3>
+                        <div class="mb-6">
+                            <span class="text-5xl font-bold text-primary">$29</span>
+                            <span class="text-gray-600 dark:text-gray-400">/місяць</span>
+                        </div>
+                        <ul class="space-y-3 mb-8">
+                            <li class="flex items-center text-gray-600 dark:text-gray-300">
+                                <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+                                </svg>
+                                30 днів доступу
+                            </li>
+                            <li class="flex items-center text-gray-600 dark:text-gray-300">
+                                <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+                                </svg>
+                                12 уроків
+                            </li>
+                            <li class="flex items-center text-gray-600 dark:text-gray-300">
+                                <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+                                </svg>
+                                Telegram підтримка
+                            </li>
+                        </ul>
+                        <button onclick="showPage('auth')" class="w-full px-6 py-3 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-lg font-bold transition">
+                            Обрати план
+                        </button>
+                    </div>
+
+                    <div class="border-2 border-primary rounded-xl p-8 relative">
+                        <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 px-4 py-1 bg-primary text-white text-sm font-bold rounded-full">
+                            Популярний
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Безлімітний доступ</h3>
+                        <div class="mb-6">
+                            <span class="text-5xl font-bold text-primary">$49</span>
+                            <span class="text-gray-600 dark:text-gray-400">/назавжди</span>
+                        </div>
+                        <ul class="space-y-3 mb-8">
+                            <li class="flex items-center text-gray-600 dark:text-gray-300">
+                                <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+                                </svg>
+                                Необмежений доступ
+                            </li>
+                            <li class="flex items-center text-gray-600 dark:text-gray-300">
+                                <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+                                </svg>
+                                Всі майбутні оновлення
+                            </li>
+                            <li class="flex items-center text-gray-600 dark:text-gray-300">
+                                <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+                                </svg>
+                                Пріоритетна підтримка
+                            </li>
+                        </ul>
+                        <button onclick="showPage('auth')" class="w-full px-6 py-3 bg-primary hover:bg-primary-dark text-white rounded-lg font-bold transition">
+                            Обрати план
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Lessons Page -->
+        <div id="lessonsPage" class="page hidden">
+            <div class="mb-8">
+                <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-2">Уроки курсу</h1>
+                <p class="text-gray-600 dark:text-gray-300">Пройдіть всі уроки послідовно для отримання максимального результату</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Free Lesson -->
+                <div class="lesson-card bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden cursor-pointer" onclick="showPage('lesson')">
+                    <div class="h-48 bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center">
+                        <svg class="w-20 h-20 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3z"/>
+                        </svg>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="px-3 py-1 bg-green-100 text-green-800 text-xs font-bold rounded-full">БЕЗКОШТОВНО</span>
+                            <span class="text-sm text-gray-500 dark:text-gray-400">Урок 1</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Вступ до ШІ</h3>
+                        <p class="text-gray-600 dark:text-gray-300 mb-4">Що таке штучний інтелект та як він може допомогти вам у повсякденному житті</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500 dark:text-gray-400">⏱ 15 хв</span>
+                            <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-bold rounded-full">ДОСТУПНО</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lesson 2 -->
+                <div class="lesson-card bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+                    <div class="h-48 bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center">
+                        <svg class="w-20 h-20 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"/>
+                        </svg>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-bold rounded-full">ПЛАТНО</span>
+                            <span class="text-sm text-gray-500 dark:text-gray-400">Урок 2</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Основи ChatGPT</h3>
+                        <p class="text-gray-600 dark:text-gray-300 mb-4">Перші кроки у ChatGPT: реєстрація, інтерфейс та базові команди</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500 dark:text-gray-400">⏱ 20 хв</span>
+                            <span class="px-3 py-1 bg-gray-200 text-gray-600 text-xs font-bold rounded-full">🔒 ЗАБЛОКОВАНО</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lesson 3 -->
+                <div class="lesson-card bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden opacity-75">
+                    <div class="h-48 bg-gradient-to-br from-pink-400 to-pink-600 flex items-center justify-center">
+                        <svg class="w-20 h-20 text-white opacity-50" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"/>
+                        </svg>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-bold rounded-full">ПЛАТНО</span>
+                            <span class="text-sm text-gray-500 dark:text-gray-400">Урок 3</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Промпт-інженерія</h3>
+                        <p class="text-gray-600 dark:text-gray-300 mb-4">Як правильно формулювати запити для отримання найкращих відповідей</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500 dark:text-gray-400">⏱ 25 хв</span>
+                            <span class="px-3 py-1 bg-gray-200 text-gray-600 text-xs font-bold rounded-full">🔒 ЗАБЛОКОВАНО</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-12 text-center">
+                <button onclick="showPage('auth')" class="px-8 py-4 bg-primary hover:bg-primary-dark text-white rounded-lg font-bold text-lg transition shadow-lg">
+                    Отримати доступ до всіх уроків
+                </button>
+            </div>
+        </div>
+
+        <!-- Lesson View Page -->
+        <div id="lessonPage" class="page hidden">
+            <div class="max-w-4xl mx-auto">
+                <button onclick="showPage('lessons')" class="mb-6 flex items-center text-primary hover:text-primary-dark font-medium">
+                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"/>
+                    </svg>
+                    Назад до уроків
+                </button>
+
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden">
+                    <!-- Video Placeholder -->
+                    <div class="aspect-video bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center">
+                        <div class="text-center text-white">
+                            <svg class="w-24 h-24 mx-auto mb-4 opacity-75" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"/>
+                            </svg>
+                            <p class="text-xl font-medium">Відео урок буде тут</p>
+                        </div>
+                    </div>
+
+                    <div class="p-8">
+                        <div class="mb-6">
+                            <span class="px-3 py-1 bg-green-100 text-green-800 text-sm font-bold rounded-full">Урок 1 - Безкоштовно</span>
+                        </div>
+
+                        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-6">Вступ до штучного інтелекту</h1>
+
+                        <div class="prose dark:prose-invert max-w-none mb-8">
+                            <h2>Що ви дізнаєтесь у цьому уроці</h2>
+                            <p>У цьому вступному уроці ми познайомимося з основами штучного інтелекту та дізнаємося, як він може стати вашим помічником у повсякденному житті.</p>
+
+                            <h3>Основні теми:</h3>
+                            <ul>
+                                <li>Що таке штучний інтелект простими словами</li>
+                                <li>ChatGPT, Claude, Perplexity - огляд основних інструментів</li>
+                                <li>Практичні приклади використання ШІ</li>
+                                <li>Як ШІ може допомогти в роботі, навчанні та побуті</li>
+                            </ul>
+
+                            <h3>Практичні завдання:</h3>
+                            <ol>
+                                <li>Зареєструйтеся в ChatGPT (безкоштовна версія)</li>
+                                <li>Спробуйте задати 3 різні запити</li>
+                                <li>Запишіть найцікавішу відповідь</li>
+                            </ol>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-4 mb-8">
+                            <img src="https://via.placeholder.com/400x250/ff8c42/ffffff?text=Приклад+1" alt="Example 1" class="rounded-lg w-full">
+                            <img src="https://via.placeholder.com/400x250/ff7420/ffffff?text=Приклад+2" alt="Example 2" class="rounded-lg w-full">
+                        </div>
+
+                        <div class="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 p-6 rounded-lg mb-8">
+                            <h4 class="font-bold text-blue-900 dark:text-blue-300 mb-2">💡 Порада експерта</h4>
+                            <p class="text-blue-800 dark:text-blue-200">Не бійтеся експериментувати! Чим більше ви практикуєтесь, тим краще розумієте можливості ШІ.</p>
+                        </div>
+
+                        <div class="flex items-center justify-between pt-8 border-t border-gray-200 dark:border-gray-700">
+                            <div></div>
+                            <button onclick="alert('✅ Урок завершено! Відкрито наступний урок.')" class="px-8 py-3 bg-primary hover:bg-primary-dark text-white rounded-lg font-bold transition">
+                                Завершити урок →
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Auth Page -->
+        <div id="authPage" class="page hidden">
+            <div class="max-w-md mx-auto">
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
+                    <div class="text-center mb-8">
+                        <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Вітаємо!</h2>
+                        <p class="text-gray-600 dark:text-gray-300">Увійдіть або створіть аккаунт</p>
+                    </div>
+
+                    <form class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email або телефон</label>
+                            <input type="text" placeholder="example@email.com" class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Пароль</label>
+                            <input type="password" placeholder="••••••••" class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent">
+                        </div>
+
+                        <button type="button" onclick="alert('Це демо-версія. Повна версія з авторизацією буде після деплою!')" class="w-full px-6 py-3 bg-primary hover:bg-primary-dark text-white rounded-lg font-bold transition">
+                            Увійти
+                        </button>
+
+                        <div class="text-center">
+                            <button type="button" class="text-primary hover:text-primary-dark font-medium">
+                                Немає аккаунту? Зареєструватися
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-gray-900 mt-20 py-8">
+        <div class="container mx-auto px-4 text-center text-gray-600 dark:text-gray-400">
+            <p>&copy; 2026 AI Learning Portal. Всі права захищені.</p>
+            <p class="mt-2 text-sm">Це демо-версія інтерфейсу. Повна версія буде після деплою.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+
+        themeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+        });
+
+        // Load saved theme
+        if (localStorage.getItem('theme') === 'dark') {
+            html.classList.add('dark');
+        }
+
+        // Page Navigation
+        function showPage(pageName) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.add('hidden');
+            });
+            document.getElementById(pageName + 'Page').classList.remove('hidden');
+            window.scrollTo(0, 0);
+        }
+
+        // Language Switcher (Demo)
+        document.getElementById('langSwitch').addEventListener('change', (e) => {
+            const langs = {
+                uk: 'Українська мова активована!',
+                ru: 'Русский язык активирован!',
+                en: 'English language activated!'
+            };
+            alert(langs[e.target.value] + '\n\nЦе демо-версія. Повна мультимовність буде в фінальній версії.');
+        });
+    </script>
+</body>
+</html>
