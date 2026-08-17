@@ -1,0 +1,78 @@
+<!doctype html><meta charset='utf-8'><style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1920px;height:1080px;overflow:hidden}
+body{background:#0E1116;color:#F2F5F7;
+  font-family:"Liberation Sans","DejaVu Sans",sans-serif;
+  -webkit-font-smoothing:antialiased}
+.slide{position:relative;width:1920px;height:1080px;padding:110px 130px;
+  display:flex;flex-direction:column}
+/* лёгкая виньетка, чтобы графит не читался плоским пятном */
+.slide::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(120% 120% at 50% 40%,transparent 45%,rgba(0,0,0,.55) 100%)}
+.hud{font-family:"Liberation Mono","DejaVu Sans Mono",monospace;
+  font-size:19px;letter-spacing:.18em;color:#7E8B9A;line-height:2.1}
+.hud .on{color:#22D3EE}
+.corner{position:absolute;top:110px;right:130px;text-align:right}
+.body{flex:1;display:flex;flex-direction:column;justify-content:center}
+h1{font-size:88px;line-height:1.08;font-weight:700;letter-spacing:-.02em;max-width:1400px}
+.sub{font-size:34px;line-height:1.5;color:#7E8B9A;margin-top:34px;max-width:1250px}
+.hero{font-size:210px;font-weight:700;letter-spacing:-.045em;line-height:.92}
+.hero.cold{color:#22D3EE}
+.kicker{font-family:"Liberation Mono",monospace;font-size:20px;letter-spacing:.22em;
+  color:#7E8B9A;margin-bottom:26px}
+.rule{height:1px;background:rgba(242,245,247,.13);margin:42px 0}
+/* варианты ответа */
+.opts{margin-top:60px;display:flex;flex-direction:column;gap:30px}
+.opt{display:flex;align-items:baseline;gap:34px;font-size:42px}
+.opt b{font-family:"Liberation Mono",monospace;font-size:34px;color:#22D3EE;
+  min-width:52px}
+.hint{margin-top:64px;font-size:24px;color:#7E8B9A;letter-spacing:.02em}
+/* таблица */
+table{border-collapse:collapse;width:100%;font-size:30px}
+th{text-align:left;font-family:"Liberation Mono",monospace;font-size:18px;
+  letter-spacing:.16em;color:#7E8B9A;font-weight:400;padding:0 0 22px}
+td{padding:26px 0;border-top:1px solid rgba(242,245,247,.1)}
+td.n{text-align:right;font-variant-numeric:tabular-nums}
+tr.key td{color:#F2F5F7}
+tr.key td.big{color:#22D3EE;font-weight:700;font-size:38px}
+/* две колонки */
+.cols{display:flex;gap:130px;margin-top:20px}
+.col{flex:1}
+.col h2{font-family:"Liberation Mono",monospace;font-size:22px;letter-spacing:.2em;
+  color:#7E8B9A;font-weight:400;padding-bottom:30px;
+  border-bottom:1px solid rgba(242,245,247,.13)}
+.col.win h2{color:#22D3EE}
+.row{display:flex;justify-content:space-between;align-items:baseline;
+  padding:23px 0;font-size:34px}
+.row span.v{font-variant-numeric:tabular-nums;color:#7E8B9A}
+.col.win .row span.v{color:#22D3EE}
+.row.low span.v{color:#7E8B9A}
+.note{margin-top:52px;font-size:30px;line-height:1.5;max-width:1500px}
+.note em{font-style:normal;color:#22D3EE}
+</style>
+<div class="slide">
+  <div class="hud">SIGNAL 02 · DECODED</div>
+  <div class="corner hud">TIER-CONTROLLED</div>
+  <div class="body">
+    <div class="cols">
+      <div class="col">
+        <h2>ПОЛИЦЯ</h2>
+        <div class="row"><span>Зест</span><span class="v">2,69×</span></div>
+        <div class="row"><span>Упсарин</span><span class="v">2,44×</span></div>
+        <div class="row"><span>Мультигрип</span><span class="v">2,00×</span></div>
+        <div class="row"><span>Дефлю</span><span class="v">1,10×</span></div>
+        <div class="row low"><span>Бестиа</span><span class="v">0,60×</span></div>
+      </div>
+      <div class="col win">
+        <h2>ВІЗИТ</h2>
+        <div class="row"><span>Энзибар</span><span class="v">3,06×</span></div>
+        <div class="row"><span>Зест</span><span class="v">2,94×</span></div>
+        <div class="row"><span>Бестиа</span><span class="v">2,21×</span></div>
+        <div class="row"><span>Дефлю</span><span class="v">1,92×</span></div>
+        <div class="row"><span>Фервекс</span><span class="v">1,28×</span></div>
+      </div>
+    </div>
+    <div class="note">Візит — плюс на кожному бренді, найгірший результат <em>×1,28</em>.
+      Полиця вибіркова: один бренд узагалі в мінусі.</div>
+  </div>
+</div>
